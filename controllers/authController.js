@@ -60,7 +60,7 @@ const obtenerUsuariosConRoles = async (req, res) => {
     try {
         const usuariosConRoles = await models.User.findAll({
             where: {
-              email: 'root@root.com'
+              id: req.params.id
             },
             include: models.Rol,
         });
