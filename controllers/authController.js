@@ -1,6 +1,7 @@
 const { response , request} = require('express')
 const Conexion = require('../database/ConexionUser')
 const ConexionRol = require('../database/ConexionRol')
+const models = require('../models/index')
 
 const {generarJWT} = require("../helpers/generate_jwt");
 
@@ -35,7 +36,20 @@ const login = async (req, res = response) => {
     }
 };
 
+const obtenerUsuariosConRoles = async (req, res) => {
+    try {
+        const usuariosConRoles = await models.User.findAll({
+            include: models.Rol,
+        });
+
+        res.json(usuariosConRoles);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error en el servidor' });
+    }
+};
 
 module.exports = {
-    login
+    login,
+    obtenerUsuariosConRoles
 }
