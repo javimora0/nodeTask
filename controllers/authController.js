@@ -41,6 +41,7 @@ const login = async (req, res = response) => {
 };
 
 
+//Encapsular esta funcion en el controlador de usuario
 const rolesUsuario = async (id) => {
     try {
         const usuariosConRoles = await models.User.findAll({
@@ -56,6 +57,7 @@ const rolesUsuario = async (id) => {
     }
 }
 
+//Obtiene todos los roles del usuario que se le pase por parametro
 const obtenerUsuariosConRoles = async (req, res) => {
     try {
         const usuariosConRoles = await models.User.findAll({
