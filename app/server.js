@@ -16,7 +16,6 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.userPath , require('../routes/userRoutes'))
         this.app.use(this.authPath , require('../routes/authRoutes'))
         /*this.app.use(this.prefixPath , require('../routes/taskRoutes'));
         this.app.use(this.prefixPath , require('../routes/userRoutes'));

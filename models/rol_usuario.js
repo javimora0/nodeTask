@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Rol_Usuario.init({
     id_rol: DataTypes.INTEGER,
-    id_user: DataTypes.INTEGER
+    id_usuario: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Roles_Usuarios',
