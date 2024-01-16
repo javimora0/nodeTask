@@ -31,7 +31,7 @@ const login = async (req, res = response) => {
             return res.status(500).json({ msg: `No tiene roles` });
         }
 
-        const token = generarJWT(user, rol);
+        const token = generarJWT(user.id, rol);
         return res.status(200).json({ msg: 'Login correcto', data: user, token: token });
 
     } catch (error) {
