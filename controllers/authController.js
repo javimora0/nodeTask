@@ -22,7 +22,7 @@ const login = async (req, res = response) => {
             return res.status(203).json({ msg: 'Rol incorrecto' });
         }
 
-        const rolAsignado = await rolesUsuario(user.id, rol);
+        const rolAsignado = await conx.getRolesUsuario(user.id, rol)
         if (!rolAsignado) {
             return res.status(203).json({'success': false, 'mssg': 'El usuario no tiene este rol'})
         }
@@ -35,27 +35,6 @@ const login = async (req, res = response) => {
         return res.status(500).json({ msg: 'Error en el servidor', error: error });
     }
 };
-
-
-//Encapsular esta funcion en el controlador de usuario
-const rolesUsuario = async (id, rolNombre) => {
-    try {
-        const usuariosConRoles = await models.User.findAll({
-            where: {
-                id: id,
-            },
-            include: {
-                model: models.Rol,
-                where: {
-                    nombre: rolNombre,
-                },
-            },
-        });
-        return usuariosConRoles[0].Rols
-    } catch (error) {
-        return null
-    }
-}
 
 //Obtiene todos los roles del usuario que se le pase por parametro
 const obtenerUsuariosConRoles = async (req, res) => {
@@ -73,8 +52,6 @@ const obtenerUsuariosConRoles = async (req, res) => {
         res.status(500).json({ msg: 'Error en el servidor' });
     }
 };
-
-
 
 module.exports = {
     login,

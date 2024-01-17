@@ -1,5 +1,6 @@
 const Conexion = require('../database/Conexion')
 const model = require('../models/index.js')
+const models = require("../models");
 const conx = new Conexion()
 
 class ConexionUser {
@@ -127,7 +128,26 @@ class ConexionUser {
         return resultado
     }
 
-
+    getRolesUsuario = async(id, rol) => {
+        let resultado = []
+        conx.conectar()
+        try {
+            resultado = await models.User.findAll({
+                where: {
+                    id: id,
+                },
+                include: {
+                    model: models.Rol,
+                    where: {
+                        nombre: rol,
+                    },
+                },
+            });
+            return resultado[0].Rols
+        } catch (error) {
+            return null
+        }
+    }
 }
 
 module.exports = ConexionUser
