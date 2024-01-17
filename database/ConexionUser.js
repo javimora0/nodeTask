@@ -30,14 +30,17 @@ class ConexionUser {
         return resultado;
     }
 
+    // Obtiene todos los usuarios pero tambien obtiene los roles
     getUsuarios = async () => {
         conx.conectar()
-        let resultado = await model.User.findAll()
-        conx.desconectar()
+
+        let resultado = await model.User.findAll({include: []})
         if (!resultado) {
             conx.desconectar()
             resultado = null
         }
+        conx.desconectar()
+
         return resultado;
     }
 
@@ -79,7 +82,6 @@ class ConexionUser {
         let resultado = await model.User.findByPk(id)
         if (!resultado) {
             conx.desconectar()
-            throw error
         }
         try {
             await resultado.update(body)
@@ -138,12 +140,14 @@ class ConexionUser {
                 },
                 include: {
                     model: models.Rol,
+                    as: 'roles',
+                    through: models.Roles_Usuarios,
                     where: {
                         nombre: rol,
                     },
                 },
             });
-            return resultado[0].Rols
+            return resultado[0].roles
         } catch (error) {
             return null
         }
