@@ -11,24 +11,20 @@ const login = async (req, res = response) => {
     try {
         const conx = new Conexion();
         const conxRol = new ConexionRol();
-        const user = await conx.getUsuarioRegistrado(email, password);
-        const idRol = await conxRol.getIdRol(rol);
 
-        if (idRol == null) {
-            return res.status(500).json({ msg: 'Rol incorrecto' });
+        const user = await conx.getUsuarioRegistrado(email, password);
+        if (!user) {
+            return res.status(203).json({ msg: 'Credenciales incorrectas' });
         }
 
-        const roles = await rolesUsuario(user.id);
-        let tieneRol = false
-        roles.forEach( (roles) => {
-            console.log(roles.nombre, rol)
-            if (roles.nombre === rol){
-                tieneRol = true
-            }
-        })
+        const idRol = await conxRol.getIdRol(rol);
+        if (idRol == null) {
+            return res.status(203).json({ msg: 'Rol incorrecto' });
+        }
 
-        if (!tieneRol) {
-            return res.status(500).json({ msg: `No tiene roles` });
+        const rolAsignado = await rolesUsuario(user.id, rol);
+        if (!rolAsignado) {
+            return res.status(203).json({'success': false, 'mssg': 'El usuario no tiene este rol'})
         }
 
         const token = generarJWT(user.id, rol);
@@ -42,15 +38,19 @@ const login = async (req, res = response) => {
 
 
 //Encapsular esta funcion en el controlador de usuario
-const rolesUsuario = async (id) => {
+const rolesUsuario = async (id, rolNombre) => {
     try {
         const usuariosConRoles = await models.User.findAll({
             where: {
-                id: id
+                id: id,
             },
-            include: models.Rol,
+            include: {
+                model: models.Rol,
+                where: {
+                    nombre: rolNombre,
+                },
+            },
         });
-
         return usuariosConRoles[0].Rols
     } catch (error) {
         return null
@@ -67,7 +67,7 @@ const obtenerUsuariosConRoles = async (req, res) => {
             include: models.Rol,
         });
 
-        res.json(usuariosConRoles[0].Rols);
+        res.json(usuariosConRoles);
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Error en el servidor' });

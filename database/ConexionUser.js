@@ -1,6 +1,5 @@
 const Conexion = require('../database/Conexion')
 const model = require('../models/index.js')
-const {status} = require("express/lib/response");
 const conx = new Conexion()
 
 class ConexionUser {
