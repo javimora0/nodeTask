@@ -32,12 +32,14 @@ class ConexionUser {
 
     getUsuarios = async () => {
         conx.conectar()
+
         let resultado = await model.User.findAll()
-        conx.desconectar()
         if (!resultado) {
             conx.desconectar()
             resultado = null
         }
+        conx.desconectar()
+
         return resultado;
     }
 

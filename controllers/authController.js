@@ -43,7 +43,9 @@ const obtenerUsuariosConRoles = async (req, res) => {
             where: {
               id: req.params.id
             },
-            include: models.Rol,
+            include: {
+                model: models.Rol
+            },
         });
 
         res.json(usuariosConRoles);
