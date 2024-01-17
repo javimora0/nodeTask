@@ -29,7 +29,10 @@ const crearUsuario = async (req = request, res = response) => {
 
 const modificarUsuario = async (req = request, res = response) => {
     let resultado = await conx.updateUsuario(req.body, req.params.id)
-        res.status(200).json({'success': true, 'usuario': resultado})
+    if (!resultado) {
+        res.status(203).json({'success': false, 'mssg': 'Error al modificar el usuario'})
+    }
+    res.status(200).json({'success': true, 'usuario': resultado})
 
 }
 
