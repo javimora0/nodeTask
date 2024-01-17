@@ -1,13 +1,13 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
 const userController = require('../controllers/userController')
-const midsJWT = require('../middlewares/midsJWT')
+const midJWT = require('../middlewares/validarJWT')
 const mid = require('../middlewares/checkDatos')
 
 const router = Router()
 
-    // Middleware para todas las rutas
-router.use(midsJWT.validarJWT)
+// Middleware para todas las rutas
+router.use(midJWT.validarAdmin)
 
 // Rutas para usuarios
 router.route('/')

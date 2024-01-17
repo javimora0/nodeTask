@@ -24,7 +24,6 @@ class ConexionUser {
         let resultado = await model.User.findByPk(id)
         conx.desconectar()
         if (!resultado) {
-            conx.desconectar()
             resultado = null
         }
         return resultado;
@@ -35,12 +34,10 @@ class ConexionUser {
         conx.conectar()
 
         let resultado = await model.User.findAll({include: []})
+        conx.desconectar()
         if (!resultado) {
-            conx.desconectar()
             resultado = null
         }
-        conx.desconectar()
-
         return resultado;
     }
 
@@ -68,6 +65,7 @@ class ConexionUser {
     deleteUsuario = async (id) => {
         conx.conectar()
         let resultado = await model.User.findByPk(id)
+
         if (!resultado) {
             conx.desconectar()
             throw error
@@ -82,14 +80,15 @@ class ConexionUser {
         let resultado = await model.User.findByPk(id)
         if (!resultado) {
             conx.desconectar()
+            throw error
         }
         try {
             await resultado.update(body)
         } catch (error) {
-            conx.desconectar()
             throw error
+        }finally {
+            conx.desconectar()
         }
-        conx.desconectar()
         return resultado
     }
 
@@ -109,25 +108,6 @@ class ConexionUser {
         }
         conx.desconectar()
         return resultado;
-    }
-
-    tieneRol = async(id, rol) => {
-        let resultado = 0
-        conx.conectar()
-        try{
-            resultado = await model.Roles_Usuarios.findOne({
-                where: {
-                    id_rol: rol,
-                    id_usuario:id
-                }
-            })
-
-        }catch (error) {
-            throw error
-        }finally {
-            conx.desconectar()
-        }
-        return resultado
     }
 
     getRolesUsuario = async(id, rol) => {
@@ -153,5 +133,4 @@ class ConexionUser {
         }
     }
 }
-
 module.exports = ConexionUser
