@@ -10,7 +10,7 @@ const validarJWT = (req, res, next) => {
 
     try {
         const {uid, rol} = jwt.verify(token, process.env.secretOrPrivateKey)
-        if (rol === "programador") {
+        if (rol === "admin") {
             next()
         }else {
             res.status(400).json({'msg':'Acceso no autorizado'})

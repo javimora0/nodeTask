@@ -4,7 +4,7 @@ const cors = require('cors');
 class Server {
     constructor() {
         this.app = express();
-        this.userPath = '/api/user'
+        this.userPath = '/user'
         this.authPath = '/api'
         this.middlewares()
         this.routes()
