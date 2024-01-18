@@ -9,7 +9,7 @@ const validarAdmin = (req, res, next) => {
     }
 
     try {
-        const {uid, rol} = jwt.verify(token, process.env.secretOrPrivateKey)
+        const {rol} = jwt.verify(token, process.env.secretOrPrivateKey)
         if (rol === "admin") {
             next()
         }else {

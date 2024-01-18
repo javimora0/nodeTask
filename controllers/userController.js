@@ -8,16 +8,13 @@ const conx = new Conexion()
 const conxRol = new ConexionRol()
 const conxRolUsuario = new ConexionRolUsuario()
 const crearUsuario = async (req = request, res = response) => {
-    let rol = await conxRol.getIdRol(req.body.rol)
-    if (!rol) {
-        res.status(203).json({'success': false, 'mssg': 'El rol no existe'})
-    }
 
     let usuario = await conx.insertarUsuario(req.body)
     if (!usuario) {
         res.status(203).json({'success': false, 'mssg': 'Error al crear usuario'})
     }
 
+    let rol = await conxRol.getIdRol(req.body.rol)
     let resultado = await conxRolUsuario.asignarRol(usuario.id, rol.id)
     if (!resultado) {
         res.status(203).json({'success': false, 'mssg': 'Error al asignar rol'})

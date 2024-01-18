@@ -9,7 +9,7 @@ class ConexionTask {
         try {
             resultado = await model.Task.create(body)
         } catch (error) {
-            throw error
+            return null
         } finally {
             conx.desconectar()
         }
@@ -28,16 +28,7 @@ class ConexionTask {
 
     getTareas = async () => {
         conx.conectar()
-        let resultado = await model.Task.findAll(
-            {
-                include: [
-                    'descripcion',
-                    'dificultad',
-                    'horas_previstas',
-                    'horas_realizadas',
-                    'porcentaje',
-                    'completada']
-            })
+        let resultado = await model.Task.findAll()
         conx.desconectar()
         if (!resultado) {
             resultado = null
@@ -59,14 +50,10 @@ class ConexionTask {
     updateTarea = async (body, id) => {
         conx.conectar()
         let resultado = await model.Task.findByPk(id)
-        if (!resultado) {
-            conx.desconectar()
-            throw error
-        }
         try {
             await resultado.update(body)
         } catch (error) {
-            throw error
+            return null
         } finally {
             conx.desconectar()
         }
@@ -75,6 +62,12 @@ class ConexionTask {
     asignarTarea = async (idTarea, idUsuario) => {
 
     }
+
+    tareasUsuarios = async () => {
+
+    }
+
+
 }
 
 
