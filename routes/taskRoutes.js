@@ -6,8 +6,9 @@ const midJWT = require("../middlewares/validarJWT");
 
 const router = Router()
 
-//router.use(midJWT.validarAdmin)
 
+// GESTION DE TAREAS DEL ADMINISTRADOR
+router.use(midJWT.validarAdmin)
 
 // CRUD TAREAS
 router.route('/')
@@ -19,7 +20,6 @@ router.route('/:id')
     .delete(taskController.borrarTarea)
     .put(taskController.modificarTarea)
 
-
-
+router.put('/:idTarea/:idUsuario',taskController.asignarTarea)
 
 module.exports = router

@@ -28,7 +28,16 @@ class ConexionTask {
 
     getTareas = async () => {
         conx.conectar()
-        let resultado = await model.Task.findAll()
+        let resultado = await model.Task.findAll(
+            {
+                include: [
+                    'descripcion',
+                    'dificultad',
+                    'horas_previstas',
+                    'horas_realizadas',
+                    'porcentaje',
+                    'completada']
+            })
         conx.desconectar()
         if (!resultado) {
             resultado = null
@@ -63,5 +72,10 @@ class ConexionTask {
         }
         return resultado
     }
+    asignarTarea = async (idTarea, idUsuario) => {
+
+    }
 }
+
+
 module.exports = ConexionTask

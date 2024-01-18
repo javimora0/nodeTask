@@ -21,7 +21,7 @@ const modificarTarea = async (req = request, res = response) => {
 
 const obtenerTarea = async (req = request, res = response) => {
     let resultado = await conx.getTarea(req.params.id)
-    res.status(200).json({'success': true, 'usuario': resultado})
+    res.status(200).json({'success': true, 'data': resultado})
 }
 
 const obtenerTareas = async (req = request, res = response) => {
@@ -37,6 +37,15 @@ const borrarTarea = async (req = request, res = response) => {
         res.status(200).json({'success': true, 'mssg': 'Tarea eliminada'})
     }
 }
+
+const asignarTarea = async (req = request, res= response) => {
+    let resultado = await conx.asignarTarea(req.params.idTarea, req.params.idUsuario)
+    if (!resultado) {
+        res.status(203).json({'success':false,'mssg':'Error al asignar la tarea'})
+    }
+    res.status(200).json({'success':true, 'data':resultado})
+}
+
 module.exports = {
     crearTarea,
     modificarTarea,
