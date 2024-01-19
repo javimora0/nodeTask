@@ -9,7 +9,7 @@ class ConexionTask {
         try {
             resultado = await model.Task.create(body)
         } catch (error) {
-            throw error
+            return null
         } finally {
             conx.desconectar()
         }
@@ -50,18 +50,25 @@ class ConexionTask {
     updateTarea = async (body, id) => {
         conx.conectar()
         let resultado = await model.Task.findByPk(id)
-        if (!resultado) {
-            conx.desconectar()
-            throw error
-        }
         try {
             await resultado.update(body)
         } catch (error) {
-            throw error
+            return null
         } finally {
             conx.desconectar()
         }
         return resultado
     }
+    asignarTarea = async (idTarea, idUsuario) => {
+
+    }
+
+    tareasUsuarios = async () => {
+
+    }
+
+
 }
+
+
 module.exports = ConexionTask

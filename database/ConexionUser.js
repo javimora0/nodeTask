@@ -1,6 +1,8 @@
 const Conexion = require('../database/Conexion')
 const model = require('../models/index.js')
 const models = require("../models");
+const {params} = require("express/lib/request");
+const {request} = require("express");
 const conx = new Conexion()
 
 class ConexionUser {
@@ -41,26 +43,6 @@ class ConexionUser {
         return resultado;
     }
 
-    // Si el usuario no existe devuelve null, si existe devuelve el usuario
-    getUsuarioEmail = async (email) => {
-        let resultado = 0
-        conx.conectar()
-        try {
-            resultado = await model.user.findOne({
-                where: {
-                    email: email
-                }
-            })
-            if (!resultado) {
-                resultado = null;
-            }
-        } catch (error) {
-            resultado = null
-            conx.desconectar()
-        }
-        conx.desconectar()
-        return resultado
-    }
 
     deleteUsuario = async (id) => {
         conx.conectar()
@@ -132,5 +114,57 @@ class ConexionUser {
             return null
         }
     }
+
+    usuarioExisteValidator = async() => {
+        let resultado = [];
+        conx.conectar();
+        try {
+            resultado = await model.User.find({where: {id: request.params.id}})
+        } catch (error) {
+            console.log(`Aquí: ${error} `)
+        } finally {
+            conx.desconectar();
+            console.log(`Res: ${resultado.length}`)
+            if (resultado.length !== 0){
+                throw new CustomError('Usuario existe');
+            }
+        }
+        return resultado;
+    }
+
+    idNoExisteValidator = async(id) => {
+        let resultado = [];
+        conx.conectar();
+        try {
+            resultado = await model.User.findOne({where: {id: id}})
+        } catch (error) {
+            console.log(`Aquí: ${error} `)
+        } finally {
+            conx.desconectar();
+            console.log(`Res: ${resultado.length}`)
+            if (resultado.length === 0){
+                throw new CustomError('Usuario no existe');
+            }
+        }
+        return resultado;
+    }
+
+    emailExisteValidator = async (email) => {
+        let resultado = [];
+        conx.conectar();
+        try {
+            resultado = await model.User.find({where: {email: email}})
+        } catch (error) {
+            console.log(`Aquí: ${error} `)
+        } finally {
+            conx.desconectar();
+            console.log(`Res: ${resultado.length}`)
+            if (resultado.length !== 0){
+                throw new CustomError('Email existe');
+            }
+        }
+        return resultado;
+    }
+
 }
 module.exports = ConexionUser

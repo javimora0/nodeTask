@@ -36,9 +36,12 @@ const login = async (req, res = response) => {
 };
 
 //Obtiene todos los roles del usuario que se le pase por parametro.. Funcion para probar asociaciones
-const obtenerUsuariosConRoles = async (req, res) => {
+const obtenerUsuarioConRoles = async (req, res) => {
     try {
         const usuariosConRoles = await models.User.findAll({
+            where: {
+                id: req.params.id
+            },
             include: [{
                 model: models.Rol,
                 as: 'roles',
@@ -55,5 +58,5 @@ const obtenerUsuariosConRoles = async (req, res) => {
 
 module.exports = {
     login,
-    obtenerUsuariosConRoles
+    obtenerUsuarioConRoles
 }

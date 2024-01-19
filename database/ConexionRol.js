@@ -22,6 +22,22 @@ class ConexionRol {
         }
         return resultado
     }
+
+    rolExisteValidator = async (rol) => {
+        let resultado = []
+        conx.conectar()
+        try {
+            resultado = await model.Rol.find({where: {nombre: rol}})
+        } catch (error) {
+            console.log(`Aqui: ${error}`)
+        } finally {
+            conx.desconectar()
+            if (resultado.length !== 0) {
+                throw new CustomError('Email existe');
+            }
+        }
+        return resultado
+    }
 }
 
 module.exports = ConexionRol
