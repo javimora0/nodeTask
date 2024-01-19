@@ -13,7 +13,7 @@ router.use(midJWT.validarAdmin)
 
 // CRUD TAREAS
 router.route('/')
-    .get(midJWT.validarAdmin, taskController.obtenerTareas)
+    .get(taskController.obtenerTareas)
     .post([
         check('descripcion','La descripcion debe contener entre 5 y 255 carácteres.').isString().isLength({min: 5, max: 255}),
         check('dificultad', 'La dificultad debe ser: XS, M, L, XL').isIn(['XS', 'S', 'M', 'L', 'XL']),
@@ -26,9 +26,18 @@ router.route('/')
     ], taskController.crearTarea)
 
 router.route('/:id')
-    .get(midJWT.validarAdmin, taskController.obtenerTarea)
-    .delete(midJWT.validarAdmin, taskController.borrarTarea)
-    .put(midJWT.validarAdmin, mid.existeTarea, taskController.modificarTarea)
+    .get(mid.existeTarea, taskController.obtenerTarea)
+    .delete(mid.existeTarea, taskController.borrarTarea)
+    .put([
+            check('descripcion','La descripcion debe contener entre 5 y 255 carácteres.').isString().isLength({min: 5, max: 255}),
+            check('dificultad', 'La dificultad debe ser: XS, M, L, XL').isIn(['XS', 'S', 'M', 'L', 'XL']),
+            check('horas_previstas','Las horas previstas para una tarea han de ser entre 1 y 300').isInt({min: 1, max: 300}),
+            check('horas_realizadas','Las horas realizadas para una tarea han de ser entre 1 y 300').isInt({min: 1, max: 300}),
+            check('porcentaje','El porcentaje de una tarea debe estar entre 0 - 100').isInt({min: 0, max: 100}),
+            check('completada', 'El campo completada solo admite 1 o 0').isInt({min: 0, max: 1}),
+            check('id_usuario').custom(idNoExiste),
+            validarCampos
+    ],mid.existeTarea, taskController.modificarTarea)
 
 //Asigna una tarea a un usuario
 //router.put('/:idTarea/:idUsuario',taskController.asignarTarea)
