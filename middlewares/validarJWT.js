@@ -41,7 +41,22 @@ const validarProgramador = (req, res, next) => {
     }
 }
 
+const validarToken = (req, res, next) => {
+    const token = req.header('x-token')
+    if (!token) {
+        return res.status(401).json({'msg':'No hay token en la peticion'})
+    }
+    try {
+        const {uid, rol} = jwt.verify(token, process.env.secretOrPrivateKey)
+        next()
+    } catch (error) {
+        console.log(error)
+        res.status(401).json({'msg':'Token no valido'})
+    }
+}
+
 module.exports = {
     validarAdmin,
-    validarProgramador
+    validarProgramador,
+    validarToken
 }

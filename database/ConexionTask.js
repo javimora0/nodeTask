@@ -59,8 +59,37 @@ class ConexionTask {
         }
         return resultado
     }
-    asignarTarea = async (idTarea, idUsuario) => {
 
+    getTareasDisponibles = async () => {
+        conx.conectar()
+        let tareas = await model.Task.findAll({
+            where: {
+                id_usuario: null,
+                completada: 0
+            }
+        })
+        if (!tareas) {
+            tareas = null
+        }
+        conx.desconectar()
+        return tareas
+    }
+    asignarTarea = async (idTarea, idUsuario) => {
+        conx.conectar()
+        let tarea = 0
+        try{
+            tarea = await model.Task.update({id_usuario: idUsuario}, {
+                where: {
+                    id: idTarea
+                },
+            })
+
+        } catch (error) {
+            throw error
+        } finally {
+            conx.desconectar()
+        }
+        return tarea
     }
 
     tareasUsuarios = async () => {
