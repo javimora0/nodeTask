@@ -34,7 +34,7 @@ const perteneceTarea = async (req, res, next) => {
     }
 }
 
-existeTarea = async (req, res, next) => {
+const existeTarea = async (req, res, next) => {
     const conx = new ConexionTarea()
 
     let tarea = await conx.getTarea(req.params.id)
@@ -45,8 +45,19 @@ existeTarea = async (req, res, next) => {
     }
 }
 
+const checkPassword = async (req, res, next) => {
+    const conx = new Conexion()
+    let usuario = await conx.getUsuarioPassword(req.body.old_password, req.params.id)
+    if (!usuario) {
+        return res.status(203).json({'success':false, 'mssg':'Usuario incorrecto'})
+    }else {
+        next()
+    }
+}
+
 module.exports = {
     existeUsuario,
     existeTarea,
-    perteneceTarea
+    perteneceTarea,
+    checkPassword
 }

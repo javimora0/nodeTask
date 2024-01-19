@@ -92,10 +92,6 @@ class ConexionTask {
         return tarea
     }
 
-    tareasUsuarios = async () => {
-
-    }
-
     getTareasUsuario = async (idUsuario) => {
         conx.conectar()
         let tareas = []
@@ -108,6 +104,30 @@ class ConexionTask {
         conx.conectar()
         let tareas = []
         tareas = await model.Task.findOne({where:{id_usuario: idUsuario, id: idTarea}})
+        conx.desconectar()
+        return tareas
+    }
+
+    getTareasCompletadas = async() =>  {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findAll({
+            where:{
+                completada:1
+            }
+        })
+        conx.desconectar()
+        return tareas
+    }
+
+    getTareasPendientes = async() =>  {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findAll({
+            where:{
+                completada:0
+            }
+        })
         conx.desconectar()
         return tareas
     }

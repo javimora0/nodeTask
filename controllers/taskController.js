@@ -80,6 +80,23 @@ const modificarTareaUsuario = async (req = request, res = response) => {
     res.status(200).json({'success': true, 'data': tarea})
 }
 
+const tareasCompletadas = async (req = request, res = response) => {
+    let tareas = await conx.getTareasCompletadas()
+    if (!tareas) {
+        return res.status(203).json({'success': false, 'mssg': 'Error al obtener las tareas'})
+    }
+    res.status(200).json({'success': true, 'data': tareas})
+}
+
+const tareasPendientes = async (req = request, res = response) => {
+    let tareas = await conx.getTareasPendientes()
+    if (!tareas) {
+        return res.status(203).json({'success': false, 'mssg': 'Error al obtener las tareas'})
+    }
+    res.status(200).json({'success': true, 'data': tareas})
+}
+
+
 module.exports = {
     crearTarea,
     modificarTarea,
@@ -90,5 +107,7 @@ module.exports = {
     tareasUsuarios,
     taskDisponibles,
     obtenerTareasUsuario,
-    modificarTareaUsuario
+    modificarTareaUsuario,
+    tareasCompletadas,
+    tareasPendientes,
 }

@@ -49,8 +49,20 @@ const borrarUsuario = async (req = request, res = response) => {
 }
 
 const modificarPassword = async (req = request, res = response) => {
+    let resultado = await conx.changePassword(req.body.new_password, req.params.id)
+    if (!resultado) {
+        return res.status(200).json({'success': false, 'mssg': 'Error al cambiar la contraseña'})
+    }
+    res.status(200).json({'success': true, 'mssg': 'Contraseña cambiada correctamente', 'data': resultado})
+}
 
-    res.status(200).json({'success': true, 'mssg': 'Usuario eliminado', 'data': 's'})
+const getUsuarioPassword = async (req = request, res = response, old_password) => {
+    let usuario = await conx.getUsuarioPassword(old_password, req.params.id)
+    if (!usuario) {
+        return null
+    } else {
+        return usuario
+    }
 }
 
 module.exports = {
@@ -59,5 +71,6 @@ module.exports = {
     obtenerUsuarios,
     borrarUsuario,
     modificarUsuario,
-    modificarPassword
+    modificarPassword,
+    getUsuarioPassword
 }
