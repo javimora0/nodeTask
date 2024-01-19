@@ -96,7 +96,21 @@ class ConexionTask {
 
     }
 
+    getTareasUsuario = async (idUsuario) => {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findAll({where: {id_usuario: idUsuario}})
+        conx.desconectar()
+        return tareas
+    }
 
+    getTareaUsuario = async (idUsuario, idTarea) => {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findOne({where:{id_usuario: idUsuario, id: idTarea}})
+        conx.desconectar()
+        return tareas
+    }
 }
 
 

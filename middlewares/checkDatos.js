@@ -1,7 +1,7 @@
 const { response, request  } = require('express')
 const Conexion = require('../database/ConexionUser')
 const ConexionTarea = require('../database/ConexionTask')
-
+const jwt = require('../middlewares/validarJWT')
 const existeUsuario = async (req, res, next) => {
     const conx = new Conexion()
     let id = 0
@@ -14,6 +14,21 @@ const existeUsuario = async (req, res, next) => {
     console.log(usuario)
     if (!usuario) {
         return res.status(203).json({'success':false, 'mssg':'Usuario no encontrado'})
+    }else {
+        next()
+    }
+}
+
+// Comprueba si una tarea pertenece al usuario indicado
+const perteneceTarea = async (req, res, next) => {
+    const conx = new ConexionTarea()
+    let idUsuario = req.params.idUsuario
+    let idTarea = req.params.idTarea
+
+    let tarea = await conx.getTareaUsuario(idUsuario, idTarea)
+    console.log(tarea)
+    if (!tarea) {
+        return res.status(203).json({'success':false, 'mssg':'Esta tarea no pertenece a este usuario'})
     }else {
         next()
     }
@@ -32,5 +47,6 @@ existeTarea = async (req, res, next) => {
 
 module.exports = {
     existeUsuario,
-    existeTarea
+    existeTarea,
+    perteneceTarea
 }

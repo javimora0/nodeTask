@@ -47,10 +47,17 @@ const borrarUsuario = async (req = request, res = response) => {
     let resultado = await conx.deleteUsuario(req.params.id)
     res.status(200).json({'success': true, 'mssg': 'Usuario eliminado', 'data': resultado})
 }
+
+const modificarPassword = async (req = request, res = response) => {
+
+    res.status(200).json({'success': true, 'mssg': 'Usuario eliminado', 'data': 's'})
+}
+
 module.exports = {
     crearUsuario,
     obtenerUsuario,
     obtenerUsuarios,
     borrarUsuario,
-    modificarUsuario
+    modificarUsuario,
+    modificarPassword
 }
