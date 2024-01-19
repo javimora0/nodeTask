@@ -59,15 +59,78 @@ class ConexionTask {
         }
         return resultado
     }
+
+    getTareasDisponibles = async () => {
+        conx.conectar()
+        let tareas = await model.Task.findAll({
+            where: {
+                id_usuario: null,
+                completada: 0
+            }
+        })
+        if (!tareas) {
+            tareas = null
+        }
+        conx.desconectar()
+        return tareas
+    }
     asignarTarea = async (idTarea, idUsuario) => {
+        conx.conectar()
+        let tarea = 0
+        try{
+            tarea = await model.Task.update({id_usuario: idUsuario}, {
+                where: {
+                    id: idTarea
+                },
+            })
 
+        } catch (error) {
+            throw error
+        } finally {
+            conx.desconectar()
+        }
+        return tarea
     }
 
-    tareasUsuarios = async () => {
-
+    getTareasUsuario = async (idUsuario) => {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findAll({where: {id_usuario: idUsuario}})
+        conx.desconectar()
+        return tareas
     }
 
+    getTareaUsuario = async (idUsuario, idTarea) => {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findOne({where:{id_usuario: idUsuario, id: idTarea}})
+        conx.desconectar()
+        return tareas
+    }
 
+    getTareasCompletadas = async() =>  {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findAll({
+            where:{
+                completada:1
+            }
+        })
+        conx.desconectar()
+        return tareas
+    }
+
+    getTareasPendientes = async() =>  {
+        conx.conectar()
+        let tareas = []
+        tareas = await model.Task.findAll({
+            where:{
+                completada:0
+            }
+        })
+        conx.desconectar()
+        return tareas
+    }
 }
 
 

@@ -11,6 +11,15 @@ const router = Router()
 
 router.use(midJWT.validarAdmin)
 
+// Tareas realizadas
+router.get('/completadas',taskController.tareasCompletadas)
+
+// Tareas pendientes
+router.get('/pendientes',taskController.tareasPendientes)
+
+// Tareas de  un programador
+router.get('/user/:id', mid.existeUsuario,taskController.obtenerTareasUsuario)
+
 // CRUD TAREAS
 router.route('/')
     .get(taskController.obtenerTareas)
@@ -38,6 +47,9 @@ router.route('/:id')
             check('id_usuario').custom(idNoExiste),
             validarCampos
     ],mid.existeTarea, taskController.modificarTarea)
+
+
+
 
 //Asigna una tarea a un usuario
 //router.put('/:idTarea/:idUsuario',taskController.asignarTarea)

@@ -166,5 +166,30 @@ class ConexionUser {
         return resultado;
     }
 
+    changePassword = async (new_password, idUsuario) => {
+        let user = 0
+        conx.conectar()
+        user = await model.User.findByPk(idUsuario)
+        user.password = new_password
+        try {
+            user.save()
+        } catch (error) {
+            throw error
+        } finally {
+            conx.desconectar()
+        }
+        return user
+    }
+    getUsuarioPassword = async (old_password, id) => {
+        let user = 0
+        conx.conectar()
+        user = await model.User.findByPk(id)
+        if (user.password !== old_password || !user){
+            user = null
+        }
+
+        return user
+    }
+
 }
 module.exports = ConexionUser
