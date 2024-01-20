@@ -1,6 +1,6 @@
 'use strict';
 const {genUsers} = require('../factories/userFactory')
-
+const bcrypt = require('bcrypt')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
         await queryInterface.bulkInsert('users', [{
             nombre: 'root',
             email: 'root@root.com',
-            password: 'root',
+            password: bcrypt.hash('root', 10),
             createdAt: new Date(),
             updatedAt: new Date()
         }])

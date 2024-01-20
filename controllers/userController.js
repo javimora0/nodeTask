@@ -30,6 +30,7 @@ const cifrarPassword = async (password) => {
 }
 
 const modificarUsuario = async (req = request, res = response) => {
+    req.body.password = cifrarPassword(req.body.password)
     let resultado = await conx.updateUsuario(req.body, req.params.id)
     if (!resultado) {
         res.status(203).json({'success': false, 'mssg': 'Error al modificar el usuario'})
@@ -54,7 +55,7 @@ const borrarUsuario = async (req = request, res = response) => {
 }
 
 const modificarPassword = async (req = request, res = response) => {
-    let resultado = await conx.changePassword(req.body.new_password, req.params.id)
+    let resultado = await conx.changePassword(req.body,req.params.id)
     if (!resultado) {
         return res.status(200).json({'success': false, 'mssg': 'Error al cambiar la contraseña'})
     }

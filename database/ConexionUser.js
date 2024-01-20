@@ -172,11 +172,18 @@ class ConexionUser {
         return resultado;
     }
 
-    changePassword = async (new_password, idUsuario) => {
+    changePassword = async (body,idUsuario) => {
         let user = 0
         conx.conectar()
-        user = await model.User.findByPk(idUsuario)
-        user.password = new_password
+        user = await model.User.findOne({where:{id:idUsuario}})
+        if (!user) {
+            return null
+        }
+        let resultado = bcrypt.compare(body.old_password,user.password)
+        if (!resultado) {
+            return null
+        }
+        user.password = await bcrypt.hash(body.new_password, 10)
         try {
             user.save()
         } catch (error) {
