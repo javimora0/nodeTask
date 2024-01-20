@@ -3,6 +3,7 @@ const Conexion = require('../database/ConexionUser');
 const ConexionRol = require('../database/ConexionRol');
 const ConexionRolUsuario = require('../database/ConexionRolUsuario');
 const bcrypt = require('bcrypt');
+const mailer = require('../helpers/mailer')
 
 const conx = new Conexion()
 const conxRol = new ConexionRol()
@@ -85,6 +86,29 @@ const asignarRol = async (req = request, res = response) => {
     res.status(200).json({'success':true, 'mssg':'Rol asignado correctamente'})
 }
 
+const sendMail = async (req = request, res = response) =>  {
+    let usuario = await conx.getUsuarioEmail(req.body.email)
+    let newPassword = generarCaracteresAleatorios(10)
+    if (usuario){
+        let resultado = await conx.establecerPassword(usuario, newPassword)
+        if (resultado) {
+            await mailer.sendMail(usuario.email, newPassword)
+        }
+    }
+    res.status(200).json({"success": true, 'mssg': 'Contraseña cambiada'})
+}
+
+function generarCaracteresAleatorios (longitud) {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let resultado = '';
+
+    for (let i = 0; i < longitud; i++) {
+        const indiceAleatorio = Math.floor(Math.random() * caracteres.length);
+        resultado += caracteres.charAt(indiceAleatorio);
+    }
+
+    return resultado;
+}
 
 module.exports = {
     crearUsuario,
@@ -95,4 +119,5 @@ module.exports = {
     modificarPassword,
     getUsuarioPassword,
     asignarRol,
+    sendMail
 }

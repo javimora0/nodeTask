@@ -5,9 +5,8 @@ const mid = require("../middlewares/checkDatos")
 
 const router = Router()
 
-router.use(midJWT.validarToken)
 
 // Modifica la contraseña de un usuario
-router.put('/change_password/:id', mid.existeUsuario,userController.modificarPassword)
-
+router.put('/change_password/:id',midJWT.validarToken, mid.existeUsuario,userController.modificarPassword)
+router.post('/send_password', userController.sendMail)
 module.exports = router
