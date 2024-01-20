@@ -2,6 +2,7 @@ const Conexion = require('../database/Conexion')
 const model = require('../models/index.js')
 const models = require("../models");
 const {request} = require("express");
+const bcrypt = require("bcrypt");
 const conx = new Conexion()
 
 class ConexionUser {
@@ -79,10 +80,16 @@ class ConexionUser {
         try {
             resultado = await model.User.findOne({
                 where: {
-                    email: email,
-                    password: password
+                    email: email
                 }
             })
+            if (!resultado) {
+                return null
+            }
+            let passwordCorrecta = await bcrypt.compare(password, resultado.password)
+            if (!passwordCorrecta) {
+                return null
+            }
         } catch (error) {
             conx.desconectar()
             throw error;
