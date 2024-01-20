@@ -8,6 +8,6 @@ const router = Router()
 router.use(midJWT.validarToken)
 
 // Modifica la contraseña de un usuario
-router.put('/change_password/:id', mid.checkPassword,userController.modificarPassword)
+router.put('/change_password/:id', mid.existeUsuario,userController.modificarPassword)
 
 module.exports = router

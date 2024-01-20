@@ -5,15 +5,14 @@ const models = require('../models/index')
 const {generarJWT} = require("../helpers/generate_jwt");
 
 const login = async (req, res = response) => {
-    const {email, password, rol} = req.body;
-
+    let {email, password, rol} = req.body;
     try {
         const conx = new Conexion();
         const conxRol = new ConexionRol();
 
         const user = await conx.getUsuarioRegistrado(email, password);
         if (!user) {
-            return res.status(203).json({msg: 'Credenciales incorrectas'});
+            return res.status(203).json({msg: 'Usuario incorrecto'});
         }
 
         const idRol = await conxRol.getIdRol(rol);
@@ -34,6 +33,8 @@ const login = async (req, res = response) => {
         return res.status(500).json({msg: 'Error en el servidor', error: error});
     }
 };
+
+
 
 //Obtiene todos los roles del usuario que se le pase por parametro.. Funcion para probar asociaciones
 const obtenerUsuarioConRoles = async (req, res) => {

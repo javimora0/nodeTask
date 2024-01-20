@@ -32,7 +32,7 @@ class ConexionRol {
             console.log(`Aqui: ${error}`)
         } finally {
             conx.desconectar()
-            if (resultado.length === 0) {
+            if (resultado.length !== 0) {
                 throw new CustomError('Rol no existe');
             }
         }

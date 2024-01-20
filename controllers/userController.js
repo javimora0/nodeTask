@@ -2,11 +2,14 @@ const {response, request} = require('express')
 const Conexion = require('../database/ConexionUser');
 const ConexionRol = require('../database/ConexionRol');
 const ConexionRolUsuario = require('../database/ConexionRolUsuario');
+const bcrypt = require('bcrypt');
 
 const conx = new Conexion()
 const conxRol = new ConexionRol()
 const conxRolUsuario = new ConexionRolUsuario()
 const crearUsuario = async (req = request, res = response) => {
+    let body = req.body
+    body.password = await cifrarPassword(body.password)
 
     let usuario = await conx.insertarUsuario(req.body)
     if (!usuario) {
@@ -22,8 +25,12 @@ const crearUsuario = async (req = request, res = response) => {
     }
 
 }
+const cifrarPassword = async (password) => {
+    return bcrypt.hash(password, 10);
+}
 
 const modificarUsuario = async (req = request, res = response) => {
+    req.body.password = cifrarPassword(req.body.password)
     let resultado = await conx.updateUsuario(req.body, req.params.id)
     if (!resultado) {
         res.status(203).json({'success': false, 'mssg': 'Error al modificar el usuario'})
@@ -48,7 +55,7 @@ const borrarUsuario = async (req = request, res = response) => {
 }
 
 const modificarPassword = async (req = request, res = response) => {
-    let resultado = await conx.changePassword(req.body.new_password, req.params.id)
+    let resultado = await conx.changePassword(req.body,req.params.id)
     if (!resultado) {
         return res.status(200).json({'success': false, 'mssg': 'Error al cambiar la contraseña'})
     }
