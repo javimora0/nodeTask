@@ -8,7 +8,6 @@ const {idNoExiste} = require("../helpers/db-validators");
 
 const router = Router()
 
-
 router.use(midJWT.validarAdmin)
 
 // Tareas realizadas
@@ -18,7 +17,7 @@ router.get('/completadas',taskController.tareasCompletadas)
 router.get('/pendientes',taskController.tareasPendientes)
 
 // Tareas de  un programador
-router.get('/user/:id', mid.existeUsuario,taskController.obtenerTareasUsuario)
+router.get('user/:id', mid.existeUsuario,taskController.obtenerTareasUsuario)
 
 // CRUD TAREAS
 router.route('/')

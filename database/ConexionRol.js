@@ -32,8 +32,8 @@ class ConexionRol {
             console.log(`Aqui: ${error}`)
         } finally {
             conx.desconectar()
-            if (resultado.length !== 0) {
-                throw new CustomError('Email existe');
+            if (resultado.length === 0) {
+                throw new CustomError('Rol no existe');
             }
         }
         return resultado

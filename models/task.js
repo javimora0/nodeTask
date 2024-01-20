@@ -4,7 +4,6 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
     class Task extends Model {
-
         static associate(models) {
         }
     }

@@ -11,12 +11,14 @@ const router = Router()
 
 router.use(midJWT.validarAdmin)
 
-
-
-//ruta para que un administrador pueda asignar rol a un usuario
 //Ruta para ver todos los roles de un usuario
-
 router.get('/roles/:id', mid.existeUsuario,authController.obtenerUsuarioConRoles);
+
+// Ruta para asignar un rol a un asuario
+router.put('/rol/:id', [
+    check('rol').custom(rolExiste),
+    validarCampos
+],mid.existeUsuario,userController.asignarRol)
 
 // Rutas para usuarios
 router.route('/')

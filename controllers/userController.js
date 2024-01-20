@@ -3,7 +3,6 @@ const Conexion = require('../database/ConexionUser');
 const ConexionRol = require('../database/ConexionRol');
 const ConexionRolUsuario = require('../database/ConexionRolUsuario');
 
-
 const conx = new Conexion()
 const conxRol = new ConexionRol()
 const conxRolUsuario = new ConexionRolUsuario()
@@ -65,6 +64,21 @@ const getUsuarioPassword = async (req = request, res = response, old_password) =
     }
 }
 
+const asignarRol = async (req = request, res = response) => {
+    let rolesAsignado = await conx.getRolesUsuario(req.params.id, req.body.rol)
+    console.log(rolesAsignado)
+    if (rolesAsignado) {
+        return res.status(203).json({'success':false, 'mssg':'El usuario ya tiene este rol'})
+    }
+    let idRol = await conxRol.getIdRol(req.body.rol)
+    let resultado = await conxRolUsuario.asignarRol(req.params.id, idRol.id)
+    if (!resultado) {
+        return res.status(203).json({'success':false, 'mssg':'Error al asignar el rol'})
+    }
+    res.status(200).json({'success':true, 'mssg':'Rol asignado correctamente'})
+}
+
+
 module.exports = {
     crearUsuario,
     obtenerUsuario,
@@ -72,5 +86,6 @@ module.exports = {
     borrarUsuario,
     modificarUsuario,
     modificarPassword,
-    getUsuarioPassword
+    getUsuarioPassword,
+    asignarRol,
 }

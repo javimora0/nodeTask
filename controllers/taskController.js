@@ -1,6 +1,5 @@
 const {response, request} = require('express')
 const Conexion = require('../database/ConexionTask');
-
 const conx = new Conexion()
 
 const crearTarea = async (req = request, res = response) => {

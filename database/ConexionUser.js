@@ -1,7 +1,6 @@
 const Conexion = require('../database/Conexion')
 const model = require('../models/index.js')
 const models = require("../models");
-const {params} = require("express/lib/request");
 const {request} = require("express");
 const conx = new Conexion()
 
