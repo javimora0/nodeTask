@@ -68,13 +68,13 @@ class ConexionUser {
             await resultado.update(body)
         } catch (error) {
             throw error
-        }finally {
+        } finally {
             conx.desconectar()
         }
         return resultado
     }
 
-    getUsuarioRegistrado = async(email, password) => {
+    getUsuarioRegistrado = async (email, password) => {
         let resultado = 0
         conx.conectar()
         try {
@@ -98,7 +98,7 @@ class ConexionUser {
         return resultado;
     }
 
-    getRolesUsuario = async(id, rol) => {
+    getRolesUsuario = async (id, rol) => {
         let resultado = []
         conx.conectar()
         try {
@@ -121,7 +121,7 @@ class ConexionUser {
         }
     }
 
-    usuarioExisteValidator = async() => {
+    usuarioExisteValidator = async () => {
         let resultado = [];
         conx.conectar();
         try {
@@ -131,14 +131,14 @@ class ConexionUser {
         } finally {
             conx.desconectar();
             console.log(`Res: ${resultado.length}`)
-            if (resultado.length !== 0){
+            if (resultado.length !== 0) {
                 throw new CustomError('Usuario existe');
             }
         }
         return resultado;
     }
 
-    idNoExisteValidator = async(id) => {
+    idNoExisteValidator = async (id) => {
         let resultado = [];
         conx.conectar();
         try {
@@ -148,7 +148,7 @@ class ConexionUser {
         } finally {
             conx.desconectar();
             console.log(`Res: ${resultado.length}`)
-            if (resultado.length === 0){
+            if (resultado.length === 0) {
                 throw new CustomError('Usuario no existe');
             }
         }
@@ -165,21 +165,21 @@ class ConexionUser {
         } finally {
             conx.desconectar();
             console.log(`Res: ${resultado.length}`)
-            if (resultado.length !== 0){
+            if (resultado.length !== 0) {
                 throw new CustomError('Email existe');
             }
         }
         return resultado;
     }
 
-    changePassword = async (body,idUsuario) => {
+    changePassword = async (body, idUsuario) => {
         let user = 0
         conx.conectar()
-        user = await model.User.findOne({where:{id:idUsuario}})
+        user = await model.User.findOne({where: {id: idUsuario}})
         if (!user) {
             return null
         }
-        let resultado = await bcrypt.compare(body.old_password,user.password)
+        let resultado = await bcrypt.compare(body.old_password, user.password)
         if (!resultado) {
             return null
         }
@@ -197,12 +197,31 @@ class ConexionUser {
         let user = 0
         conx.conectar()
         user = await model.User.findByPk(id)
-        if (user.password !== old_password || !user){
+        if (user.password !== old_password || !user) {
             user = null
         }
 
         return user
     }
 
+    getUsuarioEmail = async (email) => {
+        return await model.User.findOne({where: {email: email}})
+    }
+
+    establecerPassword = async (usuario, newPassword) => {
+        let resultado = 0
+        conx.conectar()
+        usuario.password = await bcrypt.hash(newPassword, 10)
+        try {
+            resultado = usuario.save()
+        }catch (error) {
+            throw error
+        }finally {
+            conx.desconectar()
+        }
+        return resultado
+    }
+
 }
+
 module.exports = ConexionUser
