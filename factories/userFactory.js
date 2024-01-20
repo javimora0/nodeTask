@@ -9,7 +9,7 @@ const genUsers = async (ctos = 1) => {
             {
                 nombre: fakerES.person.firstName(),
                 email: fakerES.internet.email(),
-                password: bcrypt.hash('1234', 10),
+                password: await bcrypt.hash('1234', 10),
                 createdAt: new Date(),
                 updatedAt: new Date()
             }

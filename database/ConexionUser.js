@@ -179,7 +179,7 @@ class ConexionUser {
         if (!user) {
             return null
         }
-        let resultado = bcrypt.compare(body.old_password,user.password)
+        let resultado = await bcrypt.compare(body.old_password,user.password)
         if (!resultado) {
             return null
         }
