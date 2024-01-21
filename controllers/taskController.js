@@ -1,12 +1,18 @@
 const {response, request} = require('express')
 const Conexion = require('../database/ConexionTask');
+const ConexionUser = require('../database/ConexionUser')
 const conx = new Conexion()
-
+const conxUser = new ConexionUser()
 const crearTarea = async (req = request, res = response) => {
     let tarea = await conx.insetarTarea(req.body)
     if (!tarea) {
         return res.status(203).json({'success': false, 'mssg': 'Error al crear tarea'})
     }
+
+    if (req.body.completada === 1) {
+        await conxUser.sumarTareaCompletada(req.body.id_usuario)
+    }
+
     res.status(200).json({'success': true, 'data': tarea})
 }
 
@@ -14,6 +20,13 @@ const modificarTarea = async (req = request, res = response) => {
     let tarea = await conx.updateTarea(req.body, req.params.id)
     if (!tarea) {
         return res.status(203).json({'success': false, 'mssg': 'Error al modificar la tarea'})
+    }
+    let usuario = 0
+    if (req.body.completada === 1) {
+        usuario = await conxUser.sumarTareaCompletada(req.body.id_usuario)
+    }
+    if (!usuario) {
+        return res.status(203).json({'success': false, 'mssg': 'Error al añadir tarea al usuario'})
     }
     res.status(200).json({'success': true, 'data': tarea})
 }
@@ -73,8 +86,12 @@ const obtenerTareasUsuario = async (req = request, res = response) => {
 
 const modificarTareaUsuario = async (req = request, res = response) => {
     let tarea = await conx.updateTarea(req.body, req.params.idTarea)
+
     if (!tarea) {
         return res.status(203).json({'success': false, 'mssg': 'Error al modificar la tarea'})
+    }
+    if (req.body.completada === 1) {
+        await conxUser.sumarTareaCompletada(req.params.idUsuario)
     }
     res.status(200).json({'success': true, 'data': tarea})
 }

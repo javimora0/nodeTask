@@ -9,4 +9,7 @@ const router = Router()
 // Modifica la contraseña de un usuario
 router.put('/change_password/:id',midJWT.validarToken, mid.existeUsuario,userController.modificarPassword)
 router.post('/send_password', userController.sendMail)
+
+// Obtener ranking de jugadores
+router.get('/ranking', midJWT.validarToken, userController.getRanking)
 module.exports = router

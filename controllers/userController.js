@@ -110,6 +110,14 @@ function generarCaracteresAleatorios (longitud) {
     return resultado;
 }
 
+const getRanking = async(req = request, res = response) => {
+    const ranking = await conx.ranking()
+    if (!ranking) {
+        return res.status(200).json({'success': false, 'mssg':'Error al obtener el ranking'})
+    }
+    res.status(200).json({'success': true, 'data': ranking})
+}
+
 module.exports = {
     crearUsuario,
     obtenerUsuario,
@@ -119,5 +127,6 @@ module.exports = {
     modificarPassword,
     getUsuarioPassword,
     asignarRol,
-    sendMail
+    sendMail,
+    getRanking
 }
