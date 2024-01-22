@@ -1,6 +1,5 @@
 const Conexion = require('../database/Conexion')
 const model = require('../models/index.js')
-const models = require("../models");
 const {request} = require("express");
 const bcrypt = require("bcrypt");
 const conx = new Conexion()
@@ -102,14 +101,14 @@ class ConexionUser {
         let resultado = []
         conx.conectar()
         try {
-            resultado = await models.User.findAll({
+            resultado = await model.User.findAll({
                 where: {
                     id: id,
                 },
                 include: {
-                    model: models.Rol,
+                    model: model.Rol,
                     as: 'roles',
-                    through: models.Roles_Usuarios,
+                    through: model.Roles_Usuarios,
                     where: {
                         nombre: rol,
                     },
@@ -214,14 +213,45 @@ class ConexionUser {
         usuario.password = await bcrypt.hash(newPassword, 10)
         try {
             resultado = usuario.save()
-        }catch (error) {
+        } catch (error) {
             throw error
-        }finally {
+        } finally {
             conx.desconectar()
         }
         return resultado
     }
 
+    sumarTareaCompletada = async (idUsuario) => {
+        let usuario = 0
+        conx.conectar()
+        usuario = await model.User.findByPk(idUsuario)
+        usuario.tareasCompletadas ++
+        try {
+            usuario.save()
+        } catch (error) {
+            throw error
+        } finally {
+            conx.desconectar()
+        }
+        return usuario
+    }
+
+    ranking = async () => {
+        let ranking = 0
+        conx.conectar()
+        try {
+            ranking = await model.User.findAll({
+                order: [
+                    ['tareasCompletadas', 'DESC']
+                ]
+            });
+            console.log(ranking);
+        } catch (error) {
+            console.error(error);
+        }
+        conx.desconectar()
+        return ranking
+    }
 }
 
 module.exports = ConexionUser
