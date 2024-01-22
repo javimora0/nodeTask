@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = async (mail, newPassword) => {
     const mailOptions = {
-        from: 'javier.dulcinea@gmail.com',
+        from: process.env.MAIL,
         to: mail,
         subject: 'Nueva contraseña',
         text: `Su nueva contraseña: ${newPassword}`

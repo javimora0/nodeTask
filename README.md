@@ -3,6 +3,12 @@
 # Documentación Node.js REST API
 
 ## Despliegue
+
+### Instalar dependencias
+```cmd
+npm install
+```
+
 ### Migraciones y seeders
 ```cmd
 npm run s
