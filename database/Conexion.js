@@ -23,6 +23,7 @@ class Conexion {
     }
 
     desconectar = () => {
+        console.log('Connection has been closed successfully.')
         process.on('SIGINT', () => conn.close())
     }
 

@@ -5,13 +5,14 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      // define association here
+      this.belongsToMany(models.Rol, { through: models.Roles_Usuarios, foreignKey: 'id_usuario', as: 'roles'});
     }
   }
   User.init({
     nombre: DataTypes.STRING,
     email: DataTypes.STRING,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    tareasCompletadas: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'User',
