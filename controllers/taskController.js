@@ -21,7 +21,7 @@ const modificarTarea = async (req = request, res = response) => {
     if (!tarea) {
         return res.status(203).json({'success': false, 'mssg': 'Error al modificar la tarea'})
     }
-    let usuario = 0
+    let usuario = await conxUser.getUsuario(req.body.id_usuario)
     if (req.body.completada === 1) {
         usuario = await conxUser.sumarTareaCompletada(req.body.id_usuario)
     }

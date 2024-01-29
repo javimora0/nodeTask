@@ -48,10 +48,21 @@ class ConexionTask {
     }
 
     updateTarea = async (body, id) => {
+        let resultado = 0
         conx.conectar()
-        let resultado = await model.Task.findByPk(id)
         try {
-            await resultado.update(body)
+            resultado = await model.Task.update({
+                    descripcion: body.descripcion,
+                    dificultad: body.dificultad,
+                    horas_previstas: body.horas_previstas,
+                    horas_realizadas: body.horas_realizadas,
+                    porcentaje: body.porcentaje,
+                    completada: body.completada,
+                    id_usuario: body.id_usuario
+                },
+                {
+                    where: {id: id}
+                })
         } catch (error) {
             return null
         } finally {
@@ -77,7 +88,7 @@ class ConexionTask {
     asignarTarea = async (idTarea, idUsuario) => {
         conx.conectar()
         let tarea = 0
-        try{
+        try {
             tarea = await model.Task.update({id_usuario: idUsuario}, {
                 where: {
                     id: idTarea
@@ -103,29 +114,29 @@ class ConexionTask {
     getTareaUsuario = async (idUsuario, idTarea) => {
         conx.conectar()
         let tareas = []
-        tareas = await model.Task.findOne({where:{id_usuario: idUsuario, id: idTarea}})
+        tareas = await model.Task.findOne({where: {id_usuario: idUsuario, id: idTarea}})
         conx.desconectar()
         return tareas
     }
 
-    getTareasCompletadas = async() =>  {
+    getTareasCompletadas = async () => {
         conx.conectar()
         let tareas = []
         tareas = await model.Task.findAll({
-            where:{
-                completada:1
+            where: {
+                completada: 1
             }
         })
         conx.desconectar()
         return tareas
     }
 
-    getTareasPendientes = async() =>  {
+    getTareasPendientes = async () => {
         conx.conectar()
         let tareas = []
         tareas = await model.Task.findAll({
-            where:{
-                completada:0
+            where: {
+                completada: 0
             }
         })
         conx.desconectar()
